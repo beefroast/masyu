@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		642CDD2421472F2200E6FEE4 /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD2321472F2200E6FEE4 /* Rule.swift */; };
+		642CDD262147419200E6FEE4 /* CornerRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD252147419200E6FEE4 /* CornerRule.swift */; };
+		642CDD28214741A200E6FEE4 /* WhiteStoneRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD27214741A200E6FEE4 /* WhiteStoneRule.swift */; };
+		642CDD2B214749F200E6FEE4 /* BoardElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD2A214749F200E6FEE4 /* BoardElement.swift */; };
+		642CDD2D21474A0A00E6FEE4 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD2C21474A0A00E6FEE4 /* Cell.swift */; };
+		642CDD2F21474A1C00E6FEE4 /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD2E21474A1C00E6FEE4 /* Edge.swift */; };
+		642CDD3121474A5F00E6FEE4 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD3021474A5F00E6FEE4 /* Board.swift */; };
+		642CDD3321474A7600E6FEE4 /* Corner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD3221474A7600E6FEE4 /* Corner.swift */; };
+		642CDD3521474AA600E6FEE4 /* BoardTraverser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD3421474AA600E6FEE4 /* BoardTraverser.swift */; };
 		64C2FF3E2144BD8300D4D7A0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C2FF3D2144BD8300D4D7A0 /* AppDelegate.swift */; };
 		64C2FF402144BD8300D4D7A0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C2FF3F2144BD8300D4D7A0 /* ViewController.swift */; };
 		64C2FF432144BD8300D4D7A0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64C2FF412144BD8300D4D7A0 /* Main.storyboard */; };
@@ -34,6 +43,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		642CDD2321472F2200E6FEE4 /* Rule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
+		642CDD252147419200E6FEE4 /* CornerRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRule.swift; sourceTree = "<group>"; };
+		642CDD27214741A200E6FEE4 /* WhiteStoneRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteStoneRule.swift; sourceTree = "<group>"; };
+		642CDD2A214749F200E6FEE4 /* BoardElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardElement.swift; sourceTree = "<group>"; };
+		642CDD2C21474A0A00E6FEE4 /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
+		642CDD2E21474A1C00E6FEE4 /* Edge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Edge.swift; sourceTree = "<group>"; };
+		642CDD3021474A5F00E6FEE4 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		642CDD3221474A7600E6FEE4 /* Corner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Corner.swift; sourceTree = "<group>"; };
+		642CDD3421474AA600E6FEE4 /* BoardTraverser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTraverser.swift; sourceTree = "<group>"; };
 		64C2FF3A2144BD8300D4D7A0 /* Mashuyu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mashuyu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64C2FF3D2144BD8300D4D7A0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64C2FF3F2144BD8300D4D7A0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -74,6 +92,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		642CDD2121472F0B00E6FEE4 /* Board */ = {
+			isa = PBXGroup;
+			children = (
+				642CDD29214749D700E6FEE4 /* Model */,
+				642CDD2221472F1700E6FEE4 /* Rules */,
+			);
+			path = Board;
+			sourceTree = "<group>";
+		};
+		642CDD2221472F1700E6FEE4 /* Rules */ = {
+			isa = PBXGroup;
+			children = (
+				642CDD2321472F2200E6FEE4 /* Rule.swift */,
+				642CDD252147419200E6FEE4 /* CornerRule.swift */,
+				642CDD27214741A200E6FEE4 /* WhiteStoneRule.swift */,
+			);
+			path = Rules;
+			sourceTree = "<group>";
+		};
+		642CDD29214749D700E6FEE4 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				642CDD2A214749F200E6FEE4 /* BoardElement.swift */,
+				642CDD2C21474A0A00E6FEE4 /* Cell.swift */,
+				642CDD2E21474A1C00E6FEE4 /* Edge.swift */,
+				642CDD3021474A5F00E6FEE4 /* Board.swift */,
+				642CDD3221474A7600E6FEE4 /* Corner.swift */,
+				642CDD3421474AA600E6FEE4 /* BoardTraverser.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		64C2FF312144BD8300D4D7A0 = {
 			isa = PBXGroup;
 			children = (
@@ -97,6 +147,7 @@
 		64C2FF3C2144BD8300D4D7A0 /* Mashuyu */ = {
 			isa = PBXGroup;
 			children = (
+				642CDD2121472F0B00E6FEE4 /* Board */,
 				64C2FF3D2144BD8300D4D7A0 /* AppDelegate.swift */,
 				64C2FF3F2144BD8300D4D7A0 /* ViewController.swift */,
 				64C2FF412144BD8300D4D7A0 /* Main.storyboard */,
@@ -256,8 +307,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				642CDD262147419200E6FEE4 /* CornerRule.swift in Sources */,
+				642CDD28214741A200E6FEE4 /* WhiteStoneRule.swift in Sources */,
+				642CDD2F21474A1C00E6FEE4 /* Edge.swift in Sources */,
+				642CDD2D21474A0A00E6FEE4 /* Cell.swift in Sources */,
+				642CDD3321474A7600E6FEE4 /* Corner.swift in Sources */,
+				642CDD2421472F2200E6FEE4 /* Rule.swift in Sources */,
+				642CDD3521474AA600E6FEE4 /* BoardTraverser.swift in Sources */,
+				642CDD2B214749F200E6FEE4 /* BoardElement.swift in Sources */,
 				64C2FF402144BD8300D4D7A0 /* ViewController.swift in Sources */,
 				64C2FF3E2144BD8300D4D7A0 /* AppDelegate.swift in Sources */,
+				642CDD3121474A5F00E6FEE4 /* Board.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,6 +491,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R7RTM529H4;
 				INFOPLIST_FILE = Mashuyu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -438,7 +499,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = jonathon.dollal.Mashuyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -448,6 +509,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R7RTM529H4;
 				INFOPLIST_FILE = Mashuyu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -455,7 +517,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = jonathon.dollal.Mashuyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
