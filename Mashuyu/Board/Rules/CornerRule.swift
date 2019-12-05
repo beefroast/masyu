@@ -23,4 +23,7 @@ class CornerRule: Rule {
         default: return .invalid
         }
     }
+    
+    
+    
 }

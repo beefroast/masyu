@@ -9,31 +9,24 @@
 import Foundation
 
 
-enum EdgeSolutionState {
-    case unknown
-    case solution
-    case clear
-}
-
-
-
 protocol Edge: AnyObject {
-    var state: EdgeSolutionState { get set }
+    var isInSolution: Bool? { get set }
     var corners: (Corner, Corner) { get }
+    var cells: (Cell?, Cell?) { get }
     func opposite(toCorner: Corner) -> Corner?
+    func stringRepresentationRecursive() -> String
 }
-
-
 
 class HorizontalEdge: Edge, BoardElement {
-
+    
     weak var north: Cell?
     weak var south: Cell?
     var east: Corner { didSet { east.west = self }}
     var west: Corner { didSet { west.east = self }}
     
-    var state: EdgeSolutionState = .unknown
+    var isInSolution: Bool? = nil
     var corners: (Corner, Corner) { get { return (west, east) }}
+    var cells: (Cell?, Cell?) { get { return (north, south) }}
     
     init(
         north: Cell?,
@@ -45,6 +38,11 @@ class HorizontalEdge: Edge, BoardElement {
         self.south = south
         self.east = east
         self.west = west
+        
+        self.north?.south = self
+        self.south?.north = self
+        self.east.west = self
+        self.west.east = self
     }
     
     convenience init(east: Corner, west: Corner) {
@@ -60,6 +58,22 @@ class HorizontalEdge: Edge, BoardElement {
             return nil
         }
     }
+    
+    func stringRepresentationRecursive() -> String {
+        return self.stringRepresentation() + self.east.stringRepresentationRecursive() ?? ""
+    }
+    
+    func stringRepresentation() -> String {
+        switch self.isInSolution {
+        case nil: return "-"
+        case .some(true): return "="
+        case .some(false): return " "
+        }
+    }
+    
+    var debugDescription: String {
+        get { return "Edge between [\(self.west.debugDescription)] -> [\(self.east.debugDescription)]" }
+    }
 }
 
 class VerticalEdge: Edge, BoardElement {
@@ -69,8 +83,9 @@ class VerticalEdge: Edge, BoardElement {
     weak var east: Cell?
     weak var west: Cell?
     
-    var state: EdgeSolutionState = .unknown
+    var isInSolution: Bool? = nil
     var corners: (Corner, Corner) { get { return (north, south) }}
+    var cells: (Cell?, Cell?) { get { return (east, west) }}
     
     init(
         north: Corner,
@@ -82,10 +97,19 @@ class VerticalEdge: Edge, BoardElement {
         self.south = south
         self.east = east
         self.west = west
+        
+        self.north.south = self
+        self.south.north = self
+        self.east?.west = self
+        self.west?.east = self
     }
     
     convenience init(north: Corner, south: Corner) {
         self.init(north: north, south: south, east: nil, west: nil)
+    }
+    
+    deinit {
+        print("Oh no!")
     }
     
     func opposite(toCorner corner: Corner) -> Corner? {
@@ -96,5 +120,21 @@ class VerticalEdge: Edge, BoardElement {
         } else {
             return nil
         }
+    }
+    
+    func stringRepresentationRecursive() -> String {
+        return self.stringRepresentation() + (self.east?.stringRepresentationRecursive() ?? "")
+    }
+    
+    func stringRepresentation() -> String {
+        switch self.isInSolution {
+        case nil: return ":"
+        case .some(true): return "|"
+        case .some(false): return " "
+        }
+    }
+    
+    var debugDescription: String {
+        get { return "Edge between [\(self.north.debugDescription)] v [\(self.south.debugDescription)]" }
     }
 }

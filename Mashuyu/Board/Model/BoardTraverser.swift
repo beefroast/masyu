@@ -13,12 +13,21 @@ enum OrthogonalDirection {
     case south
     case east
     case west
+    
+    static var all: [OrthogonalDirection] {
+        get { return [.north, .south, .east, .west] }
+    }
 }
 
 enum RelativeDirection {
+    
     case forwards
     case left
     case right
+    
+    static var turns: [RelativeDirection] {
+        get { return [.left, .right] }
+    }
 }
 
 enum EdgeTravelState {

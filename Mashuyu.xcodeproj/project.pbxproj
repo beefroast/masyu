@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		641CFC3523933B8E00CCEFF4 /* Solver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641CFC3423933B8E00CCEFF4 /* Solver.swift */; };
 		642CDD2421472F2200E6FEE4 /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD2321472F2200E6FEE4 /* Rule.swift */; };
 		642CDD262147419200E6FEE4 /* CornerRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD252147419200E6FEE4 /* CornerRule.swift */; };
 		642CDD28214741A200E6FEE4 /* WhiteStoneRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD27214741A200E6FEE4 /* WhiteStoneRule.swift */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		641CFC3423933B8E00CCEFF4 /* Solver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solver.swift; sourceTree = "<group>"; };
 		642CDD2321472F2200E6FEE4 /* Rule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
 		642CDD252147419200E6FEE4 /* CornerRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRule.swift; sourceTree = "<group>"; };
 		642CDD27214741A200E6FEE4 /* WhiteStoneRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteStoneRule.swift; sourceTree = "<group>"; };
@@ -92,9 +94,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		641CFC3323933B8400CCEFF4 /* Solver */ = {
+			isa = PBXGroup;
+			children = (
+				641CFC3423933B8E00CCEFF4 /* Solver.swift */,
+			);
+			path = Solver;
+			sourceTree = "<group>";
+		};
 		642CDD2121472F0B00E6FEE4 /* Board */ = {
 			isa = PBXGroup;
 			children = (
+				641CFC3323933B8400CCEFF4 /* Solver */,
 				642CDD29214749D700E6FEE4 /* Model */,
 				642CDD2221472F1700E6FEE4 /* Rules */,
 			);
@@ -309,6 +320,7 @@
 			files = (
 				642CDD262147419200E6FEE4 /* CornerRule.swift in Sources */,
 				642CDD28214741A200E6FEE4 /* WhiteStoneRule.swift in Sources */,
+				641CFC3523933B8E00CCEFF4 /* Solver.swift in Sources */,
 				642CDD2F21474A1C00E6FEE4 /* Edge.swift in Sources */,
 				642CDD2D21474A0A00E6FEE4 /* Cell.swift in Sources */,
 				642CDD3321474A7600E6FEE4 /* Corner.swift in Sources */,
@@ -490,15 +502,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = R7RTM529H4;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Mashuyu/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = jonathon.dollal.Mashuyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -508,15 +522,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = R7RTM529H4;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Mashuyu/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = jonathon.dollal.Mashuyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

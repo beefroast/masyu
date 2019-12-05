@@ -20,9 +20,27 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        guard let board = Board.instantiate(width: 2, height: 2) else { return }
+        guard let board = Board.instantiate(width: 6, height: 6) else { return }
+
+        print(board.stringRepresentation())
         
         
+        
+        
+        let edge = board.northWestCell.west
+
+        let solver = Solver()
+
+        do {
+            try solver.update(edge: edge, toIsInSolution: true)
+            try solver.update(edge: board.northWestCell.east, toIsInSolution: true)
+        } catch (let error) {
+            print(error)
+        }
+
+        print(board.stringRepresentation())
+
+        assert(board.northWestCell.isInsideSolution == true)
         
         
     }
@@ -40,12 +58,24 @@ class ViewController: UIViewController {
 
 
 
-struct EdgeCollection {
-    let original: Edge
-    let adjacent: Edge?
-    let perpendicular0: Edge?
-    let perpendicular1: Edge?
+extension Sequence {
+    
+    func scan<Result>(initial: Result, combine: (Result, Element) -> Result) -> [Result] {
+        
+        var results: [Result] = [initial]
+        var cur = initial
+        
+        for next in self {
+            cur = combine(cur, next)
+            results.append(cur)
+        }
+        
+        return results
+    }
 }
+
+
+
 
 extension Array {
     

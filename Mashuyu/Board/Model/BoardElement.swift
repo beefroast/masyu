@@ -9,7 +9,7 @@
 import Foundation
 
 
-protocol BoardElement {
+protocol BoardElement: IPrintable {
     
     associatedtype Vertical
     associatedtype Horizontal
@@ -18,5 +18,10 @@ protocol BoardElement {
     var south: Vertical { get }
     var east: Horizontal { get }
     var west: Horizontal { get }
+    
 }
 
+protocol IPrintable {
+    func stringRepresentation() -> String
+    func stringRepresentationRecursive() -> String
+}

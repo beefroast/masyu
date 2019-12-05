@@ -13,70 +13,179 @@ class Board {
     
     let width: Int
     let height: Int
-    let northWestCell: Cell
+    let cells: [[Cell]]
+    var northWestCell: Cell {
+        get { return cells[0][0] }
+    }
     
-    init(width: Int, height: Int, northWestCell: Cell) {
+    init(width: Int, height: Int, cells: [[Cell]]) {
         self.width = width
         self.height = height
-        self.northWestCell = northWestCell
+        self.cells = cells
     }
     
     static func instantiate(width: Int, height: Int) -> Board? {
         
-        // Make the corner bits
-        
-        let corners = (0...width).map { (x) -> [Corner] in
-            return (0...height).map { (y) -> Corner in
-                // This is the corner at x, y
-                return Corner()
+        var objs: [[Any?]] = (0...(2*width)).map { (_) -> [Any?] in
+            (0...(2*height)).map { (_) -> Any? in
+                return nil
             }
         }
         
-        // Make the vertical edges
-        
-        var topLeftCell: Cell? = nil
-        
-        (0...width).forPairs { (x0, x1) in
-            (0...height).forPairs({ (y0, y1) in
-                
-                // Build or fetch the edges
-                
-                let westEdge = VerticalEdge(
-                    north: corners[x0][y0],
-                    south: corners[x0][y1]
-                )
-                
-                let northEdge = HorizontalEdge(
-                    east: corners[x1][y0],
-                    west: corners[x0][y0]
-                )
-                
-                let eastEdge = corners[x1][y0].south ?? VerticalEdge(
-                    north: corners[x1][y0],
-                    south: corners[x1][y1]
-                )
-                
-                let southEdge = corners[x0][y1].east ?? HorizontalEdge(
-                    east: corners[x1][y1],
-                    west: corners[x0][y1]
-                )
-                
-                let cell = Cell(
-                    north: northEdge,
-                    south: southEdge,
-                    east: eastEdge,
-                    west: westEdge
-                )
-                
-                // Keep a reference to the top right cell
-                topLeftCell = topLeftCell ?? cell
-            })
+        for x in (0...width) {
+            for y in (0...height) {
+                objs[x*2][y*2] = Corner(name: "(\(x), \(y))")
+            }
         }
         
-        return topLeftCell.map({ (c) -> Board in
-            Board(width: width, height: height, northWestCell: c)
-        })
+        for x in (0...width-1) {
+            for y in (0...height) {
+                objs[2*x+1][y*2] = HorizontalEdge(
+                    east: objs[2*x+2][y*2] as! Corner,
+                    west: objs[2*x][y*2] as! Corner
+                )
+            }
+        }
+        
+        for x in (0...width) {
+            for y in (0...height-1) {
+                objs[2*x][y*2+1] = VerticalEdge(
+                    north: objs[2*x][y*2] as! Corner,
+                    south: objs[2*x][y*2+2] as! Corner
+                )
+            }
+        }
+        
+        for x in (0...width-1) {
+            for y in (0...height-1) {
+                objs[2*x+1][y*2+1] = Cell(
+                    north: objs[2*x+1][y*2] as! HorizontalEdge,
+                    south: objs[2*x+1][y*2+2] as! HorizontalEdge,
+                    east: objs[2*x+2][y*2+1] as! VerticalEdge,
+                    west: objs[2*x][y*2+1] as! VerticalEdge
+                )
+            }
+        }
+        
+        let cells = objs.compactMap { (anyArray) -> [Cell]? in
+            let a = anyArray.compactMap { (any) -> Cell? in
+                any as? Cell
+            }
+            if a.count > 0 {
+                return a
+            } else {
+                return nil
+            }
+        }
+        
+        print("Dumping")
+        for y in (0...2*height) {
+            var line: String = ""
+            for x in (0...2*width) {
+                line += (objs[x][y] as! IPrintable).stringRepresentation()
+            }
+            print(line)
+        }
+        print("Dumped")
+        
+        
+        for x in (0...2*width) {
+            for y in (0...2*height) {
+                if let c = objs[x][y] as? HorizontalEdge {
+                    if y == 0 {
+                        assert(c.north == nil)
+                    } else {
+                        assert(c.north != nil)
+                    }
+                    if y == 2*height {
+                        assert(c.south == nil)
+                    } else {
+                        assert(c.south != nil)
+                    }
+                }
+            }
+        }
+        
+        for x in (0...2*width) {
+            for y in (0...2*height) {
+                if let c = objs[x][y] as? HorizontalEdge {
+                    if x == 0 {
+                        assert(c.west == nil)
+                    } else {
+                        assert(c.west != nil)
+                    }
+                    if x == 2*width {
+                        assert(c.east == nil)
+                    } else {
+                        assert(c.east != nil)
+                    }
+                }
+            }
+        }
+        
+        
+        for x in (0...2*width) {
+            for y in (0...2*height) {
+                if let c = objs[x][y] as? Corner {
+                    
+                    if x == 0 {
+                        assert(c.west == nil)
+                    } else {
+                        assert(c.west != nil)
+                    }
+                    
+                    if x == 2*width {
+                        assert(c.east == nil)
+                    } else {
+                        assert(c.east != nil)
+                    }
+                    
+                    if y == 0 {
+                        assert(c.north == nil)
+                    } else {
+                        assert(c.north != nil)
+                    }
+                    
+                    if y == 2*height {
+                        assert(c.south == nil)
+                    } else {
+                        assert(c.south != nil)
+                    }
+                    
+                }
+            }
+        }
+        
+    
+        return Board(width: width, height: height, cells: cells)
     }
+    
+    
+    
+    
+    func stringRepresentation() -> String {
+        
+        var corner: Corner? = northWestCell.west.north
+        var edge: VerticalEdge? = nil
+        var lineStrings: [String] = []
+        
+        while corner != nil || edge != nil {
+            if let c = corner {
+                lineStrings.append(c.stringRepresentationRecursive())
+                edge = c.south
+                corner = nil
+            } else if let e = edge {
+                lineStrings.append(e.stringRepresentationRecursive())
+                corner = e.south
+                edge = nil
+            }
+        }
+        
+        return lineStrings.joined(separator: "\n")
+
+    }
+    
+    
 }
 
 
