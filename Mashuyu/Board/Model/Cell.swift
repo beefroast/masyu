@@ -35,12 +35,8 @@ class Cell: BoardElement {
         west.east = self
     }
     
-    deinit {
-        print("Oh no!")
-    }
-    
     func stringRepresentationRecursive() -> String {
-        return self.stringRepresentation() + (self.east.stringRepresentationRecursive() ?? "")
+        return self.stringRepresentation() + self.east.stringRepresentationRecursive()
     }
     
     func stringRepresentation() -> String {

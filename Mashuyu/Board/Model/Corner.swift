@@ -29,9 +29,6 @@ class Corner: BoardElement {
         self.name = name
     }
     
-    deinit {
-        print("Oh no!")
-    }
     
     func numberOfSolutionEdges() -> Int {
         return ((north?.isInSolution == true) ? 1 : 0)
@@ -42,6 +39,22 @@ class Corner: BoardElement {
     
     func stringRepresentationRecursive() -> String {
         return self.stringRepresentation() + (self.east?.stringRepresentationRecursive() ?? "")
+    }
+    
+    func oppositeEdge(to: Edge?) -> Edge? {
+        guard let e = to else { return nil }
+        if e === self.north { return south }
+        if e === self.south { return north }
+        if e === self.east { return west }
+        if e === self.west { return east }
+        return nil
+    }
+    
+    func edgesParallel(to: Edge?) -> [Edge] {
+        guard let e = to else { return [] }
+        if e === self.north || e === self.south { return [east, west].compactMap({ $0 }) }
+        if e === self.east || e === self.west { return [north, south].compactMap({ $0 }) }
+        return []
     }
     
     var debugDescription: String {

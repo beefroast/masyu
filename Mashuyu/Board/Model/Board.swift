@@ -78,15 +78,15 @@ class Board {
             }
         }
         
-        print("Dumping")
-        for y in (0...2*height) {
-            var line: String = ""
-            for x in (0...2*width) {
-                line += (objs[x][y] as! IPrintable).stringRepresentation()
-            }
-            print(line)
-        }
-        print("Dumped")
+//        print("Dumping")
+//        for y in (0...2*height) {
+//            var line: String = ""
+//            for x in (0...2*width) {
+//                line += (objs[x][y] as! IPrintable).stringRepresentation()
+//            }
+//            print(line)
+//        }
+//        print("Dumped")
         
         
         for x in (0...2*width) {

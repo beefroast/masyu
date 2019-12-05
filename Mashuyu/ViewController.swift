@@ -22,25 +22,23 @@ class ViewController: UIViewController {
         
         guard let board = Board.instantiate(width: 6, height: 6) else { return }
 
-        print(board.stringRepresentation())
+        print(board.stringRepresentation() + "\n")
         
-        
-        
+        board.northWestCell.east.south.cornerState = .whiteStone
         
         let edge = board.northWestCell.west
 
         let solver = Solver()
 
         do {
-            try solver.update(edge: edge, toIsInSolution: true)
             try solver.update(edge: board.northWestCell.east, toIsInSolution: true)
+            try solver.update(edge: board.northWestCell.south.south?.west, toIsInSolution: true)
         } catch (let error) {
             print(error)
         }
 
         print(board.stringRepresentation())
 
-        assert(board.northWestCell.isInsideSolution == true)
         
         
     }

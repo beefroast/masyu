@@ -107,10 +107,7 @@ class VerticalEdge: Edge, BoardElement {
     convenience init(north: Corner, south: Corner) {
         self.init(north: north, south: south, east: nil, west: nil)
     }
-    
-    deinit {
-        print("Oh no!")
-    }
+
     
     func opposite(toCorner corner: Corner) -> Corner? {
         if north === corner {

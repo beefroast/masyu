@@ -21,10 +21,18 @@ class Solver {
         return board
     }
     
+    func update(edge: Edge?, toIsInSolution: Bool, throwOnNotExist: Bool = false) throws {
+        guard let e = edge else {
+            if throwOnNotExist {
+                throw SolverInconsistencyError.inconsistent
+            }
+            return
+        }
+        try update(edge: e, toIsInSolution: toIsInSolution)
+    }
+    
     func update(edge: Edge, toIsInSolution: Bool) throws {
-        
-        print("Updating \(edge) \(ObjectIdentifier(edge))")
-        
+                
         // Already set the value of this cell, so we can't update it.
         if let value = edge.isInSolution {
             guard value == toIsInSolution else {
@@ -39,7 +47,100 @@ class Solver {
         let cells = edge.cells
         try updateEdgeCell(edgeIsIn: toIsInSolution, mc0: cells.0, mc1: cells.1)
         
-        // TODO: Check stones
+        // Let the corners validate themselves and update
+        let (c0, c1) = edge.corners
+        try touchCorner(corner: c0)
+        try touchCorner(corner: c1)
+        
+    }
+    
+    func touchCorner(corner: Corner) throws {
+        
+        let edges: [Edge] = [corner.north, corner.south, corner.east, corner.west].compactMap({ $0 as? Edge })
+
+        // Make sure that lines run through white stones...
+        
+        if corner.cornerState == .whiteStone {
+            for edge in edges {
+                if let inSolution = edge.isInSolution {
+                    try update(edge: corner.oppositeEdge(to: edge), toIsInSolution: inSolution)
+                    try corner.edgesParallel(to: edge).forEach { (edge) in
+                        try update(edge: edge, toIsInSolution: !inSolution)
+                    }
+                }
+            }
+        }
+        
+        // Make sure that we're obeying black stone rules
+        if corner.cornerState == .blackStone {
+            
+            // Must be at least two segments long from a black stone...
+            
+            if corner.north?.isInSolution == true {
+                try update(edge: corner.north?.north.north, toIsInSolution: true, throwOnNotExist: true)
+            }
+            if corner.south?.isInSolution == true {
+                try update(edge: corner.south?.south.south, toIsInSolution: true, throwOnNotExist: true)
+            }
+            if corner.east?.isInSolution == true {
+                try update(edge: corner.east?.east.east, toIsInSolution: true, throwOnNotExist: true)
+            }
+            if corner.west?.isInSolution == true {
+                try update(edge: corner.west?.west.west, toIsInSolution: true, throwOnNotExist: true)
+            }
+            
+            // Can exclude a side based approach
+            if corner.north?.north.north == nil
+                || corner.north?.north.north?.isInSolution == false
+                || corner.north?.north.east?.isInSolution == true
+                || corner.north?.north.west?.isInSolution == true {
+                try update(edge: corner.north, toIsInSolution: false)
+            }
+            if corner.south?.south.south == nil
+                || corner.south?.south.south?.isInSolution == false
+                || corner.south?.south.east?.isInSolution == true
+                || corner.south?.south.west?.isInSolution == true {
+                try update(edge: corner.south, toIsInSolution: false)
+            }
+            if corner.east?.east.east == nil
+                || corner.east?.east.east?.isInSolution == false
+                || corner.east?.east.north?.isInSolution == true
+                || corner.east?.east.south?.isInSolution == true {
+                try update(edge: corner.east, toIsInSolution: false)
+            }
+            if corner.west?.west.west == nil
+                || corner.west?.west.west?.isInSolution == false
+                || corner.west?.west.north?.isInSolution == true
+                || corner.west?.west.south?.isInSolution == true {
+                try update(edge: corner.west, toIsInSolution: false)
+            }
+            
+            
+        }
+        
+        let inSolutionEdges = edges.filter({ $0.isInSolution == true })
+        let outSolutionEdges = edges.filter({ $0.isInSolution == false })
+        let undecidedSolutionEdges = edges.filter({ $0.isInSolution == nil })
+
+        // Can't have more than two edges on a corner
+        if inSolutionEdges.count > 2 {
+            throw SolverInconsistencyError.inconsistent
+        }
+        
+        // If we've got two edges on the corner, none of the other edges are in
+        if inSolutionEdges.count == 2 {
+            for edge in undecidedSolutionEdges {
+                try update(edge: edge, toIsInSolution: false)
+            }
+        }
+        
+        // If we've got an in, and there's only one remaining spot left, that's it
+        if inSolutionEdges.count == 1 && undecidedSolutionEdges.count == 1 {
+            try update(edge: undecidedSolutionEdges[0], toIsInSolution: true)
+        }
+        
+        
+        
     }
     
     func updateEdgeCell(edgeIsIn: Bool, mc0: Cell?, mc1: Cell?) throws {
@@ -102,6 +203,8 @@ class Solver {
         
     }
     
+    
+    
     func updateEdgeCell(originalCellIsInSolution: Bool, edge: Edge, adjacentCell: Cell?) throws {
         if let c = adjacentCell {
             try updateEdgeCell(originalCellIsInSolution: originalCellIsInSolution, edge: edge, adjacentCell: c)
@@ -110,11 +213,13 @@ class Solver {
         }
     }
 
+    func update(cell: Cell?, isInSolution: Bool) throws {
+        guard let c = cell else { return }
+        try update(cell: c, isInSolution: isInSolution)
+    }
     
     func update(cell: Cell, isInSolution: Bool) throws {
-        
-        print("Updating \(cell) \(ObjectIdentifier(cell))")
-        
+                
         // Already set the value of this cell, so we can't update it.
         if let value = cell.isInsideSolution {
             guard value == isInSolution else {
@@ -131,7 +236,19 @@ class Solver {
         try updateEdgeCell(originalCellIsInSolution: isInSolution, edge: cell.east, adjacentCell: cell.east.east)
         try updateEdgeCell(originalCellIsInSolution: isInSolution, edge: cell.west, adjacentCell: cell.west.west)
         
-        // TODO: Check stones
+        // Update across the corner of white stones...
+        if cell.north.west.cornerState == .whiteStone {
+            try update(cell: cell.north.west.north?.west, isInSolution: !isInSolution)
+        }
+        if cell.north.east.cornerState == .whiteStone {
+            try update(cell: cell.north.east.north?.east, isInSolution: !isInSolution)
+        }
+        if cell.south.west.cornerState == .whiteStone {
+            try update(cell: cell.south.west.south?.west, isInSolution: !isInSolution)
+        }
+        if cell.south.east.cornerState == .whiteStone {
+            try update(cell: cell.south.east.south?.east, isInSolution: !isInSolution)
+        }
         
     }
     
