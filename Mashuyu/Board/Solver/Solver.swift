@@ -15,10 +15,100 @@ enum SolverInconsistencyError: Error {
 
 class Solver {
     
-    
-    
     func solve(board: Board) throws -> Board {
-        return board
+        let clone = board.clone()
+        return try _solve(board: clone)
+    }
+    
+    func _solve(board: Board) throws -> Board {
+        
+        // First, eliminate all improbable states
+        try eliminateImpossibilities(board: board)
+        
+        if isOneConnectedBody(board: board) {
+            // We're done
+            return board
+        }
+        
+        // Do a search for the correct solution
+        for x in (0...board.width-1) {
+            for y in (0...board.height-1) {
+                if board.cells[x][y].isInsideSolution == nil {
+                    let cloned = board.clone()
+                    do {
+                        try update(cell: cloned.cells[x][y], isInSolution: true)
+                        return try solve(board: cloned)
+                    } catch (_) {
+                        print("Bad guess")
+                        continue
+                    }
+                }
+            }
+        }
+        
+        // None of our solutions are good
+        throw SolverInconsistencyError.inconsistent
+    }
+    
+    func eliminateImpossibilities(board: Board) throws {
+        
+        var lastState: String = board.stringRepresentation()
+        
+        while true {
+            
+            // TODO: This could be a bit more efficient, we're retouching corners
+            try board.cells.forEach { (row) in
+                try row.forEach { (cell) in
+                    try self.touchCorner(corner: cell.north.west)
+                    try self.touchCorner(corner: cell.north.east)
+                    try self.touchCorner(corner: cell.south.west)
+                    try self.touchCorner(corner: cell.south.east)
+                }
+            }
+            
+            let currentState = board.stringRepresentation()
+            
+            print(currentState + "\n\n")
+            
+            if currentState == lastState {
+                break
+            } else {
+                lastState = currentState
+            }
+        }
+
+    }
+    
+    func isOneConnectedBody(board: Board) -> Bool {
+        
+        let allInsideCells = Set(board.cells.flatMap { (cellArray) -> [Cell] in
+            cellArray.filter({ $0.isInsideSolution == true })
+        })
+        
+        var visitedCells: Set<Cell> = Set()
+        self.visit(cell: allInsideCells.first, visitedCells: &visitedCells)
+
+        return visitedCells.count == allInsideCells.count
+    }
+    
+    func visit(cell: Cell?, visitedCells: inout Set<Cell>) {
+        
+        guard let c = cell, visitedCells.contains(c) == false else { return }
+
+        visitedCells.insert(c)
+        
+        if c.north.north?.isInsideSolution == true {
+            visit(cell: c.north.north, visitedCells: &visitedCells)
+        }
+        if c.south.south?.isInsideSolution == true {
+            visit(cell: c.south.south, visitedCells: &visitedCells)
+        }
+        if c.east.east?.isInsideSolution == true {
+            visit(cell: c.east.east, visitedCells: &visitedCells)
+        }
+        if c.west.west?.isInsideSolution == true {
+            visit(cell: c.west.west, visitedCells: &visitedCells)
+        }
     }
     
     func update(edge: Edge?, toIsInSolution: Bool, throwOnNotExist: Bool = false) throws {
@@ -58,9 +148,10 @@ class Solver {
         
         let edges: [Edge] = [corner.north, corner.south, corner.east, corner.west].compactMap({ $0 as? Edge })
 
-        // Make sure that lines run through white stones...
         
         if corner.cornerState == .whiteStone {
+        
+            // Make sure that lines run through white stones...
             for edge in edges {
                 if let inSolution = edge.isInSolution {
                     try update(edge: corner.oppositeEdge(to: edge), toIsInSolution: inSolution)
@@ -69,6 +160,54 @@ class Solver {
                     }
                 }
             }
+            
+            // Make sure edge pieces are lined
+            if corner.west == nil {
+                try update(edge: corner.north, toIsInSolution: true, throwOnNotExist: true)
+                try update(edge: corner.south, toIsInSolution: true, throwOnNotExist: true)
+                try update(edge: corner.east, toIsInSolution: false, throwOnNotExist: true)
+            }
+            
+            if corner.east == nil {
+                try update(edge: corner.north, toIsInSolution: true, throwOnNotExist: true)
+                try update(edge: corner.south, toIsInSolution: true, throwOnNotExist: true)
+                try update(edge: corner.west, toIsInSolution: false, throwOnNotExist: true)
+            }
+            
+            if corner.north == nil {
+                try update(edge: corner.east, toIsInSolution: true, throwOnNotExist: true)
+                try update(edge: corner.west, toIsInSolution: true, throwOnNotExist: true)
+                try update(edge: corner.south, toIsInSolution: false, throwOnNotExist: true)
+            }
+            
+            if corner.south == nil {
+                try update(edge: corner.east, toIsInSolution: true, throwOnNotExist: true)
+                try update(edge: corner.west, toIsInSolution: true, throwOnNotExist: true)
+                try update(edge: corner.north, toIsInSolution: false, throwOnNotExist: true)
+            }
+            
+            // Make sure we have a bend
+            
+            if corner.north?.north.north?.isInSolution == true
+                && corner.south?.isInSolution == true {
+                try update(edge: corner.south?.south.south, toIsInSolution: false)
+            }
+            
+            if corner.south?.south.south?.isInSolution == true
+                && corner.north?.isInSolution == true {
+                try update(edge: corner.north?.north.north, toIsInSolution: false)
+            }
+            
+            if corner.east?.east.east?.isInSolution == true
+                && corner.west?.isInSolution == true {
+                try update(edge: corner.west?.west.west, toIsInSolution: false)
+            }
+            
+            if corner.west?.west.west?.isInSolution == true
+                && corner.east?.isInSolution == true {
+                try update(edge: corner.east?.east.east, toIsInSolution: false)
+            }
+            
         }
         
         // Make sure that we're obeying black stone rules
@@ -95,24 +234,32 @@ class Solver {
                 || corner.north?.north.east?.isInSolution == true
                 || corner.north?.north.west?.isInSolution == true {
                 try update(edge: corner.north, toIsInSolution: false)
+                try update(edge: corner.south, toIsInSolution: true)
+                try update(edge: corner.south?.south.south, toIsInSolution: true)
             }
             if corner.south?.south.south == nil
                 || corner.south?.south.south?.isInSolution == false
                 || corner.south?.south.east?.isInSolution == true
                 || corner.south?.south.west?.isInSolution == true {
                 try update(edge: corner.south, toIsInSolution: false)
+                try update(edge: corner.north, toIsInSolution: true)
+                try update(edge: corner.north?.north.north, toIsInSolution: true)
             }
             if corner.east?.east.east == nil
                 || corner.east?.east.east?.isInSolution == false
                 || corner.east?.east.north?.isInSolution == true
                 || corner.east?.east.south?.isInSolution == true {
                 try update(edge: corner.east, toIsInSolution: false)
+                try update(edge: corner.west, toIsInSolution: true)
+                try update(edge: corner.west?.west.west, toIsInSolution: true)
             }
             if corner.west?.west.west == nil
                 || corner.west?.west.west?.isInSolution == false
                 || corner.west?.west.north?.isInSolution == true
                 || corner.west?.west.south?.isInSolution == true {
                 try update(edge: corner.west, toIsInSolution: false)
+                try update(edge: corner.east, toIsInSolution: true)
+                try update(edge: corner.east?.east.east, toIsInSolution: true)
             }
             
             
@@ -250,6 +397,11 @@ class Solver {
             try update(cell: cell.south.east.south?.east, isInSolution: !isInSolution)
         }
         
+        // Touch the corners
+        try touchCorner(corner: cell.north.west)
+        try touchCorner(corner: cell.north.east)
+        try touchCorner(corner: cell.south.west)
+        try touchCorner(corner: cell.south.east)
     }
     
 }

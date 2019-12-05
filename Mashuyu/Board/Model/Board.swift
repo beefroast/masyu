@@ -24,7 +24,7 @@ class Board {
         self.cells = cells
     }
     
-    static func instantiate(width: Int, height: Int) -> Board? {
+    static func instantiate(width: Int, height: Int) -> Board {
         
         var objs: [[Any?]] = (0...(2*width)).map { (_) -> [Any?] in
             (0...(2*height)).map { (_) -> Any? in
@@ -59,6 +59,7 @@ class Board {
         for x in (0...width-1) {
             for y in (0...height-1) {
                 objs[2*x+1][y*2+1] = Cell(
+                    name: "(\(x), \(y))",
                     north: objs[2*x+1][y*2] as! HorizontalEdge,
                     south: objs[2*x+1][y*2+2] as! HorizontalEdge,
                     east: objs[2*x+2][y*2+1] as! VerticalEdge,
@@ -77,18 +78,7 @@ class Board {
                 return nil
             }
         }
-        
-//        print("Dumping")
-//        for y in (0...2*height) {
-//            var line: String = ""
-//            for x in (0...2*width) {
-//                line += (objs[x][y] as! IPrintable).stringRepresentation()
-//            }
-//            print(line)
-//        }
-//        print("Dumped")
-        
-        
+
         for x in (0...2*width) {
             for y in (0...2*height) {
                 if let c = objs[x][y] as? HorizontalEdge {
@@ -122,7 +112,6 @@ class Board {
                 }
             }
         }
-        
         
         for x in (0...2*width) {
             for y in (0...2*height) {
@@ -156,11 +145,32 @@ class Board {
             }
         }
         
-    
         return Board(width: width, height: height, cells: cells)
     }
     
     
+    func clone() -> Board {
+        
+        let cloned = Board.instantiate(width: self.width, height: self.height)
+        
+        for x in 0...(width-1) {
+            for y in 0...(height-1) {
+                let oCell = self.cells[x][y]
+                let cCell = cloned.cells[x][y]
+                cCell.isInsideSolution = oCell.isInsideSolution
+                cCell.north.isInSolution = oCell.north.isInSolution
+                cCell.south.isInSolution = oCell.south.isInSolution
+                cCell.east.isInSolution = oCell.east.isInSolution
+                cCell.west.isInSolution = oCell.west.isInSolution
+                cCell.north.west.cornerState = oCell.north.west.cornerState
+                cCell.north.east.cornerState = oCell.north.east.cornerState
+                cCell.south.west.cornerState = oCell.south.west.cornerState
+                cCell.south.east.cornerState = oCell.south.east.cornerState
+            }
+        }
+        
+        return cloned
+    }
     
     
     func stringRepresentation() -> String {

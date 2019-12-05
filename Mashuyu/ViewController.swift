@@ -20,26 +20,32 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        guard let board = Board.instantiate(width: 6, height: 6) else { return }
+        let board = Board.instantiate(width: 5, height: 5)
 
-        print(board.stringRepresentation() + "\n")
+        board.northWestCell.south.south?.south.west.cornerState = .whiteStone
+        board.northWestCell.south.south?.south.east.cornerState = .whiteStone
+        board.northWestCell.south.south?.south.south?.south.east.east?.east.cornerState = .whiteStone
+        board.northWestCell.east.east?.east.east?.east.south.cornerState = .whiteStone
+        board.northWestCell.east.east?.east.east?.east.south.south?.south.south?.south.cornerState = .whiteStone
+        board.northWestCell.south.south?.south.south?.south.south?.south.south?.south.west.cornerState = .blackStone
+        board.northWestCell.east.east?.east.east?.east.east?.east.south.south?.south.cornerState = .whiteStone
+        board.northWestCell.east.east?.east.east?.east.east?.east.south.south?.south.east?.east.cornerState = .whiteStone
+        board.northWestCell.east.east?.east.east?.east.east?.east.south.south?.south.east?.east.south?.south.south?.south.cornerState = .whiteStone
+
         
-        board.northWestCell.east.south.cornerState = .whiteStone
-        
-        let edge = board.northWestCell.west
+        print(board.stringRepresentation() + "\n\n\n")
+                
 
         let solver = Solver()
 
         do {
-            try solver.update(edge: board.northWestCell.east, toIsInSolution: true)
-            try solver.update(edge: board.northWestCell.south.south?.west, toIsInSolution: true)
+            let board = try solver.solve(board: board)
+            print("Finished board -> ")
+            print(board.stringRepresentation())
         } catch (let error) {
             print(error)
         }
 
-        print(board.stringRepresentation())
-
-        
         
     }
 }

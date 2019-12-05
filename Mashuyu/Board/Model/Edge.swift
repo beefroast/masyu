@@ -65,8 +65,8 @@ class HorizontalEdge: Edge, BoardElement {
     
     func stringRepresentation() -> String {
         switch self.isInSolution {
-        case nil: return "-"
-        case .some(true): return "="
+        case nil: return "?"
+        case .some(true): return "-"
         case .some(false): return " "
         }
     }
@@ -125,7 +125,7 @@ class VerticalEdge: Edge, BoardElement {
     
     func stringRepresentation() -> String {
         switch self.isInSolution {
-        case nil: return ":"
+        case nil: return "?"
         case .some(true): return "|"
         case .some(false): return " "
         }

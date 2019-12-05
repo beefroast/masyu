@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		641CFC3523933B8E00CCEFF4 /* Solver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641CFC3423933B8E00CCEFF4 /* Solver.swift */; };
+		641CFC382398DE9E00CCEFF4 /* AStarSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641CFC372398DE9E00CCEFF4 /* AStarSearch.swift */; };
 		642CDD2421472F2200E6FEE4 /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD2321472F2200E6FEE4 /* Rule.swift */; };
 		642CDD262147419200E6FEE4 /* CornerRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD252147419200E6FEE4 /* CornerRule.swift */; };
 		642CDD28214741A200E6FEE4 /* WhiteStoneRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642CDD27214741A200E6FEE4 /* WhiteStoneRule.swift */; };
@@ -45,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		641CFC3423933B8E00CCEFF4 /* Solver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solver.swift; sourceTree = "<group>"; };
+		641CFC372398DE9E00CCEFF4 /* AStarSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AStarSearch.swift; sourceTree = "<group>"; };
 		642CDD2321472F2200E6FEE4 /* Rule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
 		642CDD252147419200E6FEE4 /* CornerRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRule.swift; sourceTree = "<group>"; };
 		642CDD27214741A200E6FEE4 /* WhiteStoneRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteStoneRule.swift; sourceTree = "<group>"; };
@@ -97,9 +99,18 @@
 		641CFC3323933B8400CCEFF4 /* Solver */ = {
 			isa = PBXGroup;
 			children = (
+				641CFC362398DE8100CCEFF4 /* AStarSearch */,
 				641CFC3423933B8E00CCEFF4 /* Solver.swift */,
 			);
 			path = Solver;
+			sourceTree = "<group>";
+		};
+		641CFC362398DE8100CCEFF4 /* AStarSearch */ = {
+			isa = PBXGroup;
+			children = (
+				641CFC372398DE9E00CCEFF4 /* AStarSearch.swift */,
+			);
+			path = AStarSearch;
 			sourceTree = "<group>";
 		};
 		642CDD2121472F0B00E6FEE4 /* Board */ = {
@@ -327,6 +338,7 @@
 				642CDD2421472F2200E6FEE4 /* Rule.swift in Sources */,
 				642CDD3521474AA600E6FEE4 /* BoardTraverser.swift in Sources */,
 				642CDD2B214749F200E6FEE4 /* BoardElement.swift in Sources */,
+				641CFC382398DE9E00CCEFF4 /* AStarSearch.swift in Sources */,
 				64C2FF402144BD8300D4D7A0 /* ViewController.swift in Sources */,
 				64C2FF3E2144BD8300D4D7A0 /* AppDelegate.swift in Sources */,
 				642CDD3121474A5F00E6FEE4 /* Board.swift in Sources */,

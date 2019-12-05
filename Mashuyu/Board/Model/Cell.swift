@@ -10,8 +10,17 @@ import Foundation
 
 
 
-class Cell: BoardElement {
+class Cell: BoardElement, Hashable {
     
+    static func == (lhs: Cell, rhs: Cell) -> Bool {
+        lhs.name == rhs.name
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        self.name.hash(into: &hasher)
+    }
+    
+    var name: String
     var north: HorizontalEdge { didSet { north.south = self }}
     var south: HorizontalEdge { didSet { south.north = self }}
     var east: VerticalEdge { didSet { east.west = self }}
@@ -19,11 +28,14 @@ class Cell: BoardElement {
     var isInsideSolution: Bool? = nil
     
     init(
+        name: String,
         north: HorizontalEdge,
         south: HorizontalEdge,
         east: VerticalEdge,
         west: VerticalEdge
         ) {
+        
+        self.name = name
         self.north = north
         self.south = south
         self.east = east
@@ -41,7 +53,7 @@ class Cell: BoardElement {
     
     func stringRepresentation() -> String {
         switch self.isInsideSolution {
-        case nil: return "?"
+        case nil: return " "
         case .some(true): return "░"
         case .some(false): return "▒"
         }
